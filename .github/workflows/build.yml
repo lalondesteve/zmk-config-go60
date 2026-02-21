@@ -28,5 +28,5 @@ jobs:
       - name: Upload result
         uses: actions/upload-artifact@v4
         with:
-          name: go60.uf2
+          name: go60
           path: go60.uf2
