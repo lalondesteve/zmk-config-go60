@@ -61,6 +61,7 @@ let
         "-DZEPHYR_MODULES=${concatStringsSep ";" allModules}"
         "-DKEYMAP_FILE=${config}/go60.keymap"
         "-DEXTRA_CONF_FILE=${kconfig}"
+        "-DNANOPB_GENERATE_CPP_STANDALONE=OFF"
       ] ++ optional (snippets != []) "-DSNIPPET=${concatStringsSep ";" snippets}";
 
       nativeBuildInputs = [ pkgs.cmake pkgs.ninja python pkgs.dtc gcc-arm-embedded ];
