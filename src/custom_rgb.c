@@ -14,13 +14,20 @@
 #define COLOR_NUMPAD 150
 #define COLOR_CAPS 12
 
+static struct zmk_led_hsb base_color = {0};
+
 void change_hue_only(uint16_t new_hue) {
   struct zmk_led_hsb color = zmk_rgb_underglow_calc_hue(0);
+  // If calc_hue returns 0 for saturation/brightness, fallback to base_color's values
+  // which were captured when the keyboard was known to be in a good state
+  if (color.s == 0 && color.b == 0) {
+      color.s = base_color.s > 0 ? base_color.s : 100;
+      color.b = base_color.b > 0 ? base_color.b : 100;
+  }
   color.h = new_hue;
   zmk_rgb_underglow_set_hsb(color);
 }
 
-static uint16_t base_hue = 0;
 static bool numpad_active = false;
 static bool caps_active = false;
 static struct k_work_delayable capture_work;
@@ -28,7 +35,11 @@ static struct k_work_delayable init_work;
 
 void capture_base_hue(void) {
   struct zmk_led_hsb color = zmk_rgb_underglow_calc_hue(0);
-  base_hue = color.h;
+  // Only update base_color if we got valid saturation/brightness
+  // Otherwise we might overwrite a good saved state with a zeroed out state
+  if (color.s > 0 || color.b > 0) {
+      base_color = color;
+  }
 }
 
 void update_base_hue_if_idle(void) {
@@ -64,7 +75,7 @@ int rgb_per_layer(const zmk_event_t *eh) {
       if (caps_active) {
         change_hue_only(COLOR_CAPS);
       } else {
-        change_hue_only(base_hue);
+        change_hue_only(base_color.h);
       }
     }
   }
@@ -83,7 +94,7 @@ int caps_lock_listener(const zmk_event_t *eh) {
       if (numpad_active) {
         change_hue_only(COLOR_NUMPAD);
       } else {
-        change_hue_only(base_hue);
+        change_hue_only(base_color.h);
       }
     }
 
