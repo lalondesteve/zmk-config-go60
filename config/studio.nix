@@ -61,10 +61,9 @@ let
         "-DZEPHYR_MODULES=${concatStringsSep ";" allModules}"
         "-DKEYMAP_FILE=${config}/go60.keymap"
         "-DEXTRA_CONF_FILE=${kconfig}"
-        "-DPROTOBUF_PROTOC_EXECUTABLE=${pkgs.protobuf}/bin/protoc"
       ] ++ optional (snippets != []) "-DSNIPPET=${concatStringsSep ";" snippets}";
 
-      nativeBuildInputs = [ pkgs.cmake pkgs.ninja python pkgs.dtc gcc-arm-embedded pkgs.protobuf pkgs.nanopb ];
+      nativeBuildInputs = [ pkgs.cmake pkgs.ninja python pkgs.dtc gcc-arm-embedded ];
       buildInputs = [ zephyr ];
 
       installPhase = ''
