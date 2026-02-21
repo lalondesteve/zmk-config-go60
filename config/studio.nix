@@ -64,7 +64,7 @@ let
         "-DPROTOBUF_PROTOC_EXECUTABLE=${pkgs.protobuf}/bin/protoc"
       ] ++ optional (snippets != []) "-DSNIPPET=${concatStringsSep ";" snippets}";
 
-      nativeBuildInputs = [ pkgs.cmake pkgs.ninja python pkgs.dtc gcc-arm-embedded pkgs.protobuf ];
+      nativeBuildInputs = [ pkgs.cmake pkgs.ninja python pkgs.dtc gcc-arm-embedded pkgs.protobuf pkgs.nanopb ];
       buildInputs = [ zephyr ];
 
       installPhase = ''
