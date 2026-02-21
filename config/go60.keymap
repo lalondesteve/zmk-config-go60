@@ -32,6 +32,7 @@
 #include <dt-bindings/zmk/pointing.h>
 #include <input/processors.dtsi>
 
+#include "layers.h"
 /* Helper Macros, based on https://github.com/urob/zmk-helpers/ */
 
 #pragma once
@@ -157,11 +158,6 @@
 #define EDITOR_HOST_OS   'M'
 
 /* Automatically generated layer name defines */
-#define LAYER_Base 0
-#define LAYER_NavCSM 1
-#define LAYER_SymbolNav 2
-#define LAYER_Magic 3
-#define LAYER_Numpad 4
 
 /* To deal with the situation where there is no Lower layer, to keep &lower happy */
 #ifndef LAYER_Lower
