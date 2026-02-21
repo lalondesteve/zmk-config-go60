@@ -63,7 +63,7 @@ let
         "-DEXTRA_CONF_FILE=${kconfig}"
       ] ++ optional (snippets != []) "-DSNIPPET=${concatStringsSep ";" snippets}";
 
-      nativeBuildInputs = [ pkgs.cmake pkgs.ninja python pkgs.dtc gcc-arm-embedded ];
+      nativeBuildInputs = [ pkgs.cmake pkgs.ninja python pkgs.dtc gcc-arm-embedded pkgs.protobuf ];
       buildInputs = [ zephyr ];
 
       installPhase = ''
