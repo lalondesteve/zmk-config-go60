@@ -89,10 +89,14 @@ int caps_lock_listener(const zmk_event_t *eh) {
 
     if (new_caps_active && !caps_active) {
       capture_base_hue();
-      change_hue_only(COLOR_CAPS);
+      // Test 1: Try setting pure red directly
+      struct zmk_led_hsb test_color = {.h = 0, .s = 100, .b = 100}; 
+      zmk_rgb_underglow_set_hsb(test_color);
     } else if (!new_caps_active && caps_active) {
       if (numpad_active) {
-        change_hue_only(COLOR_NUMPAD);
+        // Test 2: Try setting hue 150 directly
+        struct zmk_led_hsb test_color = {.h = 150, .s = 100, .b = 100}; 
+        zmk_rgb_underglow_set_hsb(test_color);
       } else {
         change_hue_only(base_color.h);
       }
