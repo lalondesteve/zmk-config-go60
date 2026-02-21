@@ -25,9 +25,9 @@
 #define LAYER_Numpad 4
 
 /* To deal with the situation where there is no Lower layer, to keep &lower happy */
-#ifndef LAYER_Lower
-#define LAYER_Lower 0
-#endif
+/* #ifndef LAYER_Lower */
+/* #define LAYER_Lower 0 */
+/* #endif */
 
 / {
     input_processors {
@@ -41,8 +41,8 @@
 
     behaviors {
 
-        ZMK_TD_LAYER(td_LAYER_NavCSM, 1)
-        ZMK_TD_LAYER(td_LAYER_SymbolNav, 2)
+        /* ZMK_TD_LAYER(td_LAYER_NavCSM, 1) */
+        /* ZMK_TD_LAYER(td_LAYER_SymbolNav, 2) */
 
         spund: space_underscore {
             compatible = "zmk,behavior-mod-morph";
