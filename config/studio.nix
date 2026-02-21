@@ -28,8 +28,7 @@ let
       ];
     }
     ''
-      cp -r "$src" "$out"
-      chmod -R u+w "$out"
+      cp -r --no-preserve=mode "$src" "$out"
       for bin in protoc protoc-gen-nanopb; do
         bin_path="$out/generator/$bin"
         if [ -f "$bin_path" ]; then
