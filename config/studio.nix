@@ -13,6 +13,34 @@ let
     pyelftools pyyaml canopen packaging progress anytree intelhex pykwalify
   ]));
 
+  # The zmkfirmware/nanopb fork bundles pre-built ELF binaries (protoc,
+  # protoc-gen-nanopb) whose interpreter path does not exist in the pure Nix
+  # sandbox.  We create a patched copy of the module where those binaries are
+  # rewritten by patchelf to use the glibc/libstdc++ from our nixpkgs.
+  nanopb-patched = pkgs.runCommandNoCC "zmk-module-nanopb-patched"
+    {
+      nativeBuildInputs = [ pkgs.patchelf ];
+      src = zephyr.modules.nanopb.modulePath;
+      interpreter = "${pkgs.glibc}/lib/ld-linux-x86-64.so.2";
+      rpath = pkgs.lib.makeLibraryPath [
+        pkgs.glibc
+        pkgs.stdenv.cc.cc.lib
+      ];
+    }
+    ''
+      cp -r "$src" "$out"
+      chmod -R u+w "$out"
+      for bin in protoc protoc-gen-nanopb; do
+        bin_path="$out/generator/$bin"
+        if [ -f "$bin_path" ]; then
+          patchelf \
+            --set-interpreter "$interpreter" \
+            --set-rpath      "$rpath" \
+            "$bin_path"
+        fi
+      done
+    '';
+
   allModules = [
     "${zephyr.modules.cmsis.modulePath}"
     "${zephyr.modules.hal_nordic.modulePath}"
@@ -21,7 +49,7 @@ let
     "${zephyr.modules.picolibc.modulePath}"
     "${zephyr.modules.segger.modulePath}"
     "${zephyr.modules.cirque-input-module.src}"
-    "${zephyr.modules.nanopb.modulePath}"
+    "${nanopb-patched}"
     "${zephyr.modules.zmk-studio-messages.modulePath}"
   ];
 
@@ -61,7 +89,6 @@ let
         "-DZEPHYR_MODULES=${concatStringsSep ";" allModules}"
         "-DKEYMAP_FILE=${config}/go60.keymap"
         "-DEXTRA_CONF_FILE=${kconfig}"
-        "-DNANOPB_GENERATE_CPP_STANDALONE=OFF"
       ] ++ optional (snippets != []) "-DSNIPPET=${concatStringsSep ";" snippets}";
 
       nativeBuildInputs = [ pkgs.cmake pkgs.ninja python pkgs.dtc gcc-arm-embedded ];
