@@ -7,7 +7,7 @@ let
   config = ./.;
   
   zephyr = firmware.zephyr;
-  gcc-arm-embedded = pkgs.gcc-arm-embedded-12;
+  gcc-arm-embedded = pkgs.gcc-arm-embedded;
   
   python = (pkgs.python3.withPackages (ps: with ps; [
     pyelftools pyyaml canopen packaging progress anytree intelhex pykwalify
